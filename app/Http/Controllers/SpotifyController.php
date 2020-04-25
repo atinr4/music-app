@@ -98,7 +98,11 @@ class SpotifyController extends Controller
         {
             return response()->json($getUserDetails);
         }
-        $country = $getUserDetails->country;
+        if (isset($getUserDetails->country)) {
+            $country = $getUserDetails->country;
+        } else {
+            $country = 'IN';
+        }
 
         $response = $curlService->to(env('SPOTIFY_API_BASE').'/browse/categories')
         ->withData( array( 'country' => $country,'limit' => 10 ) )
@@ -130,7 +134,11 @@ class SpotifyController extends Controller
             return response()->json($getUserDetails);
         }
         
-        $country = $getUserDetails->country;
+        if (isset($getUserDetails->country)) {
+            $country = $getUserDetails->country;
+        } else {
+            $country = 'IN';
+        }
 
         $response = $curlService->to(env('SPOTIFY_API_BASE').'/browse/categories/'.$category.'/playlists')
         ->withData( array( 'country' => $country,'limit' => 12,'offset'=> rand(0,20) ) )
@@ -218,7 +226,11 @@ class SpotifyController extends Controller
             return response()->json($getUserDetails);
         }
         
-        $country = $getUserDetails->country;
+        if (isset($getUserDetails->country)) {
+            $country = $getUserDetails->country;
+        } else {
+            $country = 'IN';
+        }
 
         $response = $curlService->to(env('SPOTIFY_API_BASE').'/browse/featured-playlists')
         ->withData( array( 'country' => $country,'limit' => 12,'offset'=> rand(0,20) ) )

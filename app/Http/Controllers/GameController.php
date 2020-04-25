@@ -16,30 +16,32 @@ class GameController extends Controller
 
     public function submitAnswer(Request $request)
     {
-        $user_id = $request->get('user_id');
-        $user_answer = $request->get('answer');
+        $user_id = $request->input('user_id');
+        $user_answer = $request->input('answer');
+        $question_id = $request->input('question_id');
         
-        if($user_id !="" && $user_answer !=""){
+        if($user_id !="" && $user_answer !="" &&  $question_id !=""){
 
-            foreach ($user_answer as $answer){
-                $get_track_details = Quiz::get_track_details($answer['question_id']);
+            
+            $get_track_details = Quiz::get_track_details($question_id);
                 
-                if (count($get_track_details) > 0) {
-                    if ($answer['answer'] == $get_track_details['correct_answer']) {
-                        $result = "correct";
-                    } else {
-                        $result = "incorrect";
-                    }
-                        
-                    $answer_given = str_replace("'","\'", $answer['answer']); 	
-                    UserAnswer::insert_user_answer_log($user_id, $get_track_details['id'], $answer_given, $result);
+            if (count($get_track_details) > 0) {
+                if ($user_answer == $get_track_details['correct_answer']) {
+                    $result = "correct";
+                } else {
+                    $result = "incorrect";
                 }
             }
+                        
+            $answer_given = str_replace("'","\'", $user_answer); 	
+            UserAnswer::insert_user_answer_log($user_id, $get_track_details['id'], $answer_given, $result);
+            
             $userGameProfile = UserGameSystem::getUserProfile($user_id);
             $userGameProfile->streak =  GameStreak::getStreak($userGameProfile->correct_guess_streak_counter);
             $response["ResponseCode"] = 200;
             $response["message"] = "User answer saved";
             $response["user_profile"] = $userGameProfile;
+            $response["result"] = $result;
         }else{
             $response["ResponseCode"] = 400;
             $response["message"] = "Request have bad syntex";
@@ -68,6 +70,22 @@ class GameController extends Controller
         }
         $userProfile->save();
         return  $userProfile;
+    }
+
+    public function updateUserName(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $name = $request->input('name');
+
+        $getUser = UserGameSystem::find($user_id);
+        $getUser->name = $name;
+        $getUser->save();
+
+        $response["ResponseCode"] = 200;
+        $response["message"] = 'Name successfully Updated';
+        $response["user_data"] = $getUser;
+
+        return $response;
     }
     
 }
