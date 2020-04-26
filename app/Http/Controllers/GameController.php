@@ -24,7 +24,7 @@ class GameController extends Controller
 
             
             $get_track_details = Quiz::get_track_details($question_id);
-                
+            $answer_given = str_replace("ʼ","\'", str_replace("'","\'", $user_answer)); 	   
             if (count($get_track_details) > 0) {
                 if ($user_answer == $get_track_details['correct_answer']) {
                     $result = "correct";
@@ -33,7 +33,7 @@ class GameController extends Controller
                 }
             }
                         
-            $answer_given = str_replace("'","\'", $user_answer); 	
+            
             UserAnswer::insert_user_answer_log($user_id, $get_track_details['id'], $answer_given, $result);
             
             $userGameProfile = UserGameSystem::getUserProfile($user_id);
@@ -86,6 +86,16 @@ class GameController extends Controller
         $response["user_data"] = $getUser;
 
         return $response;
+    }
+
+    public function lifeCronJob() 
+    {
+        $allUserDetails = UserGameSystem::all();
+        
+        foreach ($allUserDetails as $userDetails) {
+            $userDetails->lives = 3;
+            $userDetails->save();
+        }
     }
     
 }

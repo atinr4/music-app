@@ -94,3 +94,8 @@ $router->put('/update-user-life', [
 ]);
 
 
+$router->get('/cron-life', [
+    'as' => 'cron-life', 'uses' => 'GameController@lifeCronJob'
+]);
+
+
