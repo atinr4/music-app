@@ -42,6 +42,7 @@ class SpotifyController extends Controller
 
         UserGameSystem::checkUserGameProfile($responseCheck);
         $getUserProfile =  UserGameSystem::getUserProfile($responseCheck->id);
+        $getUserProfile->profile_image = url( $getUserProfile->profile_image );
         $getUserProfile->streak =  GameStreak::getStreak($getUserProfile->correct_guess_streak_counter);
         return $getUserProfile;
     }

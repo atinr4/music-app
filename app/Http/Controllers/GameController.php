@@ -60,6 +60,15 @@ class GameController extends Controller
         return $response;
     }
 
+    public function AllLeaderBoard()
+    {
+        $getLeaderBoard = UserGameSystem::where('total_xp','!=',0)->orderBy('total_xp', 'DESC')->paginate(10);
+        $response["ResponseCode"] = 200;
+        $response["leader_board"] = $getLeaderBoard;
+
+        return $response;
+    }
+
 
     public function addLifeAfterAd(Request $request)
     {
@@ -80,6 +89,8 @@ class GameController extends Controller
         $getUser = UserGameSystem::find($user_id);
         $getUser->name = $name;
         $getUser->save();
+
+        $getUser->profile_image = url( $getUser->profile_image );
 
         $response["ResponseCode"] = 200;
         $response["message"] = 'Name successfully Updated';

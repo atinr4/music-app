@@ -89,6 +89,11 @@ $router->get('/leader-board', [
     'as' => 'leader-board', 'uses' => 'GameController@leaderBoard'
 ]);
 
+
+$router->get('/all-leader-board', [
+    'as' => 'all-leader-board', 'uses' => 'GameController@AllLeaderBoard'
+]);
+
 $router->put('/update-user-life', [
     'as' => 'update-user-life', 'uses' => 'GameController@addLifeAfterAd'
 ]);
@@ -97,5 +102,12 @@ $router->put('/update-user-life', [
 $router->get('/cron-life', [
     'as' => 'cron-life', 'uses' => 'GameController@lifeCronJob'
 ]);
+
+$router->post('upload', 'UploadController@doUpload');
+
+$router->post('/user-details-update', [
+    'as' => 'user-details-update ', 'uses' => 'GameController@updateUserName'
+]);
+
 
 
